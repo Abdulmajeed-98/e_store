@@ -6,18 +6,18 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 5),(){
-      Navigator.pushNamedAndRemoveUntil(context, "/home", (Route)=>false);
+      Navigator.pushNamedAndRemoveUntil(context, "/home",(route) => false,);
     });
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/images/a_logo.png'),
-          SizedBox(height: 20,),
-          CircularProgressIndicator(),
-        ],
-      ),
+        Center(child: Image.asset("assets/images/logo.png")),
+        SizedBox(height: 20,),
+        Center(child: CircularProgressIndicator())
+      ],),
     );
   }
 }

@@ -1,34 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mokhtar_e_store/models/product.dart';
-import 'package:mokhtar_e_store/viewmodels/cart_vm.dart';
-import 'package:provider/provider.dart';
+import 'package:mokhtar_e_store/viewmodels/products_vm.dart';
 
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  late Product p;
+  DetailsScreen({Key? key, required this.p}) : super(key: key);
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  late String imgPath;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //p= ModalRoute.of(context)!.settings.arguments as Product;
+    imgPath = widget.p.image;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartVM>(context, listen: false);
-    Product p = ModalRoute.of(context)!.settings.arguments as Product;
+    print("the image is ${widget.p.thumbnails[0]}");
     return Scaffold(
       appBar: AppBar(
-        title: Text(p.name),
+        title: Text(widget.p.name),
         actions: [
           InkWell(
             onTap: () {
               Navigator.pushNamed(context, "/cart",
-                  arguments: cart.items);
+                  arguments: ProductsVM.cartItems);
             },
             child: Container(
               child: Badge(
                   child: Icon(Icons.shopping_cart),
-                  label: Text("${cart.items.length}")),
+                  label: Text("${ProductsVM.cartItems.length}")),
               margin: EdgeInsets.only(top: 10, right: 10),
             ),
           ),
@@ -37,23 +46,29 @@ class _DetailsScreenState extends State<DetailsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(p.image),
+            Image.network(imgPath),
             SizedBox(
               height: 10,
             ),
             SizedBox(
               height: 100,
               child: ListView(
-                children: p.thumbnails
-                    .map((e) => Container(
-                          margin: EdgeInsets.all(5),
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.grey[300]),
-                          child: Center(
-                            child: Image.network(e),
+                children: widget.p.thumbnails
+                    .map((e) => InkWell(
+                          onTap: () {
+                            imgPath = e;
+                            setState(() {});
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(5),
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey[300]),
+                            child: Center(
+                              child: Image.network(e),
+                            ),
                           ),
                         ))
                     .toList(),
@@ -65,23 +80,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(p.brand),
-                  Text(p.price.toString()),
+                  Text(widget.p.brand),
+                  Text(widget.p.price.toString()),
                 ],
               ),
             ),
             SizedBox(
               height: 15,
             ),
-            Text(p.description)
+            Text(widget.p.description)
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            cart.addItem(p);
-          });
+          ProductsVM.addToCart(p: widget.p, qty: 1);
           Fluttertoast.showToast(
               msg: "product added to cart ",
               toastLength: Toast.LENGTH_SHORT,

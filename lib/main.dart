@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mokhtar_e_store/utils/app_routes.dart';
-import 'package:mokhtar_e_store/viewmodels/cart_vm.dart';
-import 'package:provider/provider.dart';
-
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartVM(),
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,10 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: false,
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(useMaterial3: false),
       //home: HomeScreen(),
-      initialRoute: "/splash",
+      initialRoute: "/signup",
       onGenerateRoute: AppRoutes.routeManager,
       // routes: {
       //   "/home":(ctx)=>HomeScreen(),
