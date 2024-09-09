@@ -1,72 +1,294 @@
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
-
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  GlobalKey<FormState> frmKey=GlobalKey();
+  final _formKey = GlobalKey<FormState>();
+
+  String? username, email, phone, city, password, confirmPassword;
+  String? gender;
+
+bool validateAndSave() {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      form.save(); // حفظ قيم الحقول في المتغيرات
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          validateAndSave();
+        },
+        child: Icon(Icons.save),
+      ),
       body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          margin: EdgeInsets.all(10),
-          child: Form(
-            key: frmKey,
+        child: Form(
+          key: _formKey,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Center(
-                    child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent),
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/default_user.png"),
-                          fit: BoxFit.fill),
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.red),
-                )),
-                TextFormField(
-                  validator: (x)=>x!=null && x.isNotEmpty?null:"this field is required",
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.account_circle),
-                    hintText: "example : Mokhtar Ba-Ghaleb",
-                    label: Text("your name : "),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10),borderSide: BorderSide(color: Colors.red)),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10),borderSide: BorderSide(color: Colors.red))
-                  ),
+                Icon(
+                  Icons.account_circle,
+                  size: 150,
+                  color: Colors.deepPurple,
                 ),
+                // حقل اسم المستخدم
                 TextFormField(
-                  validator: (e)=>checkEmail(e),
-                  keyboardType: TextInputType.url,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      labelText: 'Username'),
+                  validator: (value) {
+                    if (value!.length < 3) {
+                      return 'username should 3 letters at least';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                // حقل البريد الإلكتروني
+                TextFormField(
+                  // autovalidateMode:AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.teal),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    labelText: 'Email',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (!RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value!)) {
+                      return 'correct email format';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+
+                TextFormField(
+                  // autovalidateMode:AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.teal),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    labelText: 'Phone',
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'this is requaired feild';
+                    }
+                    if (!RegExp(r'^[0-9]{9}$').hasMatch(value)) {
+                      return 'phone number should be 9 digits';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => phone = value,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+
+                // حقل المدينة
+                DropdownButtonFormField(
+                  // autovalidateMode:AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      labelText: 'Choose city'),
+                  items: [
+                    'hadthramut',
+                    "sana'a",
+                    'alsher',
+                    'almukla',
+                    "ta'az",
+                    'aden'
+                  ].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      city = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'this is requaired feild';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+
+                // حقل كلمة المرور
+                TextFormField(
+                  autovalidateMode:AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      labelText: 'Password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'this is requaired feild';
+                    }
+                    if (value.length < 6) {
+                      return 'the password should be at least 6 digits';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => password = value,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+
+                // حقل تأكيد كلمة المرور
+                TextFormField(
+                  // autovalidateMode:AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      labelText: 'Confirm password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'this is required field';
+                    }
+                    if (value != password) {
+                      return 'your passwords not compted';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+
+                // حقل الجنس
+                Container(
+                    padding: EdgeInsets.only(left: 5),
+                    width: double.infinity,
+                    child: Text(
+                      'Choose gender',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: [
+                      Text('Male'),
+                      Radio(
+                        activeColor: Colors.teal,
+                        value: 'Male',
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value!;
+                          });
+                        },
+                      ),
+                      Text('Female'),
+                      Radio(
+                        activeColor: Colors.teal,
+                        value: 'Female',
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
-    floatingActionButton: FloatingActionButton(onPressed: (){
-        if(frmKey.currentState!.validate()){
-
-        }
-
-    },child: Icon(Icons.save),),),);
-  }
-
-  checkEmail(String? email){
-
-    return "the email incorrect format";
-  }
-  checkPhoneNumber(String phone){
-
+    );
   }
 }
