@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: false),
       //home: HomeScreen(),
-      initialRoute: "/order",
+      initialRoute: "/splash",
       onGenerateRoute: AppRoutes.routeManager,
       // routes: {
       //   "/home":(ctx)=>HomeScreen(),
@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
       //   "/cart":(ctx)=>CartScreen(),
       //   "/splash":(ctx)=>SplashScreen(),
       //   "/login":(ctx)=>LoginScreen(),
-      //
       // },
     );
   }

@@ -15,7 +15,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Product> allProducts;
   @override
   void initState() {
-    // TODO: implement initState
     allProducts = pVM.loadAllProducts();
     super.initState();
   }
@@ -53,20 +52,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Stack(
+                        clipBehavior: Clip.none,
                         children: [
                           Image.network(allProducts[index].image),
-                          IconButton(
-                              onPressed: () {
-                                allProducts[index].isFav =
-                                    !allProducts[index].isFav ? true : false;
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                allProducts[index].isFav
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.red,
-                              ))
+                          Positioned(
+                            left: -10,
+                            top: 5,
+                            child: IconButton(
+                                onPressed: () {
+                                  allProducts[index].isFav =
+                                      !allProducts[index].isFav ? true : false;
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  allProducts[index].isFav
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.red,
+                                )),
+                          ),
+                          Positioned(
+                            top: 10,
+                            right: -30,
+                            child: Container(
+                            padding: EdgeInsets.all(10),
+                            width: 70,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.horizontal(left: Radius.circular(50))
+                            ),child: Text('20%',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                          ))
                         ],
                       ),
                       // Image.network("https://storage.googleapis.com/pod_public/1300/168838.jpg"),
