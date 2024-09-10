@@ -5,6 +5,7 @@ import 'package:mokhtar_e_store/views/details_screen.dart';
 import 'package:mokhtar_e_store/views/home_screen.dart';
 import 'package:mokhtar_e_store/views/login_screen.dart';
 import 'package:mokhtar_e_store/views/not_found.dart';
+import 'package:mokhtar_e_store/views/order_form_screen.dart';
 import 'package:mokhtar_e_store/views/signup_screen.dart';
 import 'package:mokhtar_e_store/views/splash_screen.dart';
 
@@ -32,6 +33,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (ctx) => LoginScreen());
       case '/signup':
         return MaterialPageRoute(builder: (ctx) => SignupScreen());
+      case '/order':
+      return MaterialPageRoute(builder: (ctx) => OrderFormScreen());
       default:
         return MaterialPageRoute(builder: (ctx) => NotFoundScreen());
     }

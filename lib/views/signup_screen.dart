@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/my_text_field.dart';
+
 class SignupScreen extends StatefulWidget {
   @override
   _SignupScreenState createState() => _SignupScreenState();
@@ -9,9 +11,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? username, email, phone, city, password, confirmPassword;
-  String? gender;
-
-bool validateAndSave() {
+  String? gender = 'female';
+  bool isAccpet = false, isNoti = false,isVisable = true;
+  bool validateAndSaves() {
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save(); // حفظ قيم الحقول في المتغيرات
@@ -25,7 +27,7 @@ bool validateAndSave() {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          validateAndSave();
+          validateAndSaves();
         },
         child: Icon(Icons.save),
       ),
@@ -43,22 +45,10 @@ bool validateAndSave() {
                   color: Colors.deepPurple,
                 ),
                 // حقل اسم المستخدم
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      labelText: 'Username'),
+                MyTextField(
+                  labelText: 'Username',
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  suffix: Icon(Icons.person),
                   validator: (value) {
                     if (value!.length < 3) {
                       return 'username should 3 letters at least';
@@ -70,24 +60,9 @@ bool validateAndSave() {
                   height: 10,
                 ),
                 // حقل البريد الإلكتروني
-                TextFormField(
-                  // autovalidateMode:AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    labelText: 'Email',
-                  ),
-                  keyboardType: TextInputType.emailAddress,
+                MyTextField(
+                  labelText: 'Email',
+                  suffix: Icon(Icons.email),
                   validator: (value) {
                     if (!RegExp(
                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -101,23 +76,8 @@ bool validateAndSave() {
                   height: 10,
                 ),
 
-                TextFormField(
-                  // autovalidateMode:AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    labelText: 'Phone',
-                  ),
+                MyTextField(
+                  labelText: 'Phone',
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -128,7 +88,6 @@ bool validateAndSave() {
                     }
                     return null;
                   },
-                  onSaved: (value) => phone = value,
                 ),
                 SizedBox(
                   height: 10,
@@ -136,14 +95,14 @@ bool validateAndSave() {
 
                 // حقل المدينة
                 DropdownButtonFormField(
-                  // autovalidateMode:AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
+                      contentPadding: EdgeInsets.all(10),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(50)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50)),
                       focusedBorder: OutlineInputBorder(
@@ -179,25 +138,16 @@ bool validateAndSave() {
                 SizedBox(
                   height: 10,
                 ),
-
                 // حقل كلمة المرور
-                TextFormField(
-                  autovalidateMode:AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      labelText: 'Password'),
-                  obscureText: true,
+                MyTextField(
+                  suffix: InkWell(
+                    onTap: () => setState(() {
+                      isVisable = !isVisable;
+                    }),
+                    child: Icon(!isVisable? Icons.visibility:Icons.visibility_off)),
+                  labelText: 'Password',
+                  obscureText: isVisable,
+                  onSaved: (value) => password = value,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'this is requaired feild';
@@ -207,36 +157,20 @@ bool validateAndSave() {
                     }
                     return null;
                   },
-                  onSaved: (value) => password = value,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-
                 // حقل تأكيد كلمة المرور
-                TextFormField(
-                  // autovalidateMode:AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.red)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      labelText: 'Confirm password'),
+                MyTextField(
+                  password: password,
                   obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
+                  labelText: 'Confirm password',
+                  validator: (val) {
+                    if (val!.isEmpty) {
                       return 'this is required field';
                     }
-                    if (value != password) {
+                    if (val != password) {
                       return 'your passwords not compted';
                     }
                     return null;
@@ -245,7 +179,6 @@ bool validateAndSave() {
                 SizedBox(
                   height: 10,
                 ),
-
                 // حقل الجنس
                 Container(
                     padding: EdgeInsets.only(left: 5),
@@ -262,7 +195,7 @@ bool validateAndSave() {
                       Text('Male'),
                       Radio(
                         activeColor: Colors.teal,
-                        value: 'Male',
+                        value: 'male',
                         groupValue: gender,
                         onChanged: (value) {
                           setState(() {
@@ -273,7 +206,7 @@ bool validateAndSave() {
                       Text('Female'),
                       Radio(
                         activeColor: Colors.teal,
-                        value: 'Female',
+                        value: 'female',
                         groupValue: gender,
                         onChanged: (value) {
                           setState(() {
@@ -283,6 +216,28 @@ bool validateAndSave() {
                       ),
                     ],
                   ),
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                        value: isAccpet,
+                        onChanged: (val) {
+                          isAccpet = val!;
+                          setState(() {});
+                        }),
+                    Text('I accpet the termes')
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                        value: isNoti,
+                        onChanged: (val) {
+                          isNoti = val!;
+                          setState(() {});
+                        }),
+                    Text('Do you want send you notfication')
+                  ],
                 ),
               ],
             ),
