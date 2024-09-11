@@ -1,3 +1,3 @@
-# mokhtar_e_store
+# e_store
 
 A new Flutter project.
