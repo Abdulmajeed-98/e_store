@@ -39,6 +39,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           title: Text("Home Screen"),
         ),
+        bottomNavigationBar: Container(
+          // height: 100,
+          decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(onPressed: () {
+                Navigator.pushNamed(context, '/fav');
+              }, icon: Icon(Icons.favorite)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+            ],
+          ),
+        ),
         body: ListView.builder(
             itemCount: allProducts.length,
             itemBuilder: (ctx, index) {
@@ -72,17 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )),
                           ),
                           Positioned(
-                            top: 10,
-                            right: -30,
-                            child: Container(
-                            padding: EdgeInsets.all(10),
-                            width: 70,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.horizontal(left: Radius.circular(50))
-                            ),child: Text('20%',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                          ))
+                              top: 10,
+                              right: -30,
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                width: 70,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.horizontal(
+                                        left: Radius.circular(50))),
+                                child: Text(
+                                  '20%',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ))
                         ],
                       ),
                       // Image.network("https://storage.googleapis.com/pod_public/1300/168838.jpg"),

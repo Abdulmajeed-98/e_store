@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mokhtar_e_store/models/product.dart';
 import 'package:mokhtar_e_store/views/cart_screen.dart';
 import 'package:mokhtar_e_store/views/details_screen.dart';
+import 'package:mokhtar_e_store/views/fav_screen.dart';
 import 'package:mokhtar_e_store/views/home_screen.dart';
 import 'package:mokhtar_e_store/views/login_screen.dart';
 import 'package:mokhtar_e_store/views/not_found.dart';
@@ -35,6 +36,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (ctx) => SignupScreen());
       case '/order':
       return MaterialPageRoute(builder: (ctx) => OrderFormScreen());
+      case '/fav':
+        return MaterialPageRoute(builder: (ctx) => FavScreen());
       default:
         return MaterialPageRoute(builder: (ctx) => NotFoundScreen());
     }
