@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../widgets/my_text_field.dart';
 
@@ -10,9 +13,17 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? username, email, phone, city, password, confirmPassword;
+  String? username,
+      email,
+      phone,
+      city,
+      password,
+      confirmPassword,
+      puthOfImage,
+      imagePath,
+      source;
   String? gender = 'female';
-  bool isAccpet = false, isNoti = false,isVisable = true;
+  bool isAccpet = false, isNoti = false, isVisable = true;
   bool validateAndSaves() {
     final form = _formKey.currentState;
     if (form!.validate()) {
@@ -20,6 +31,12 @@ class _SignupScreenState extends State<SignupScreen> {
       return true;
     }
     return false;
+  }
+
+  Future<String?> pickImage(ImageSource source) async {
+    ImagePicker _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: source);
+    return image?.path;
   }
 
   @override
@@ -35,14 +52,61 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Form(
           key: _formKey,
           child: Container(
+            height: MediaQuery.of(context).size.height+80,
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(
-                  Icons.account_circle,
-                  size: 150,
-                  color: Colors.deepPurple,
+                InkWell(
+                  onTap: () async {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            content: SizedBox(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    child: Icon(Icons.folder_copy),
+                                    onTap: () async {
+                                      puthOfImage = await pickImage(
+                                        ImageSource.gallery,
+                                      );
+                                      setState(() {});
+                                    },
+                                  ),
+                                  InkWell(
+                                    child: Icon(Icons.camera),
+                                    onTap: () async {
+                                      puthOfImage = await pickImage(
+                                        ImageSource.camera,
+                                      );
+                                      setState(() {});
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: puthOfImage != null
+                            ? FileImage(File(puthOfImage!))
+                            : AssetImage('assets/images/a_logo.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
                 ),
                 // حقل اسم المستخدم
                 MyTextField(
@@ -141,10 +205,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 // حقل كلمة المرور
                 MyTextField(
                   suffix: InkWell(
-                    onTap: () => setState(() {
-                      isVisable = !isVisable;
-                    }),
-                    child: Icon(!isVisable? Icons.visibility:Icons.visibility_off)),
+                      onTap: () => setState(() {
+                            isVisable = !isVisable;
+                          }),
+                      child: Icon(!isVisable
+                          ? Icons.visibility
+                          : Icons.visibility_off)),
                   labelText: 'Password',
                   obscureText: isVisable,
                   onSaved: (value) => password = value,
